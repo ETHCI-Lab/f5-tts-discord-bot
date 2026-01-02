@@ -2,9 +2,10 @@ import axios, { AxiosInstance } from 'axios';
 import { Readable } from 'stream';
 import { logger } from '../middlewares/log.js';
 import { SovitsConfig } from '../interface/SovitsConfig.js';
-import { SovitsService } from '../interface/sovitsService.js';
 import { asyncGetStream, asyncPost } from '../utils/fetch.js';
-import { PeiyuData, ChaoWeiData, F5TtsBody, GradioFileDataItem, GradioFileMeta } from '../interface/f5_tts_body.js';
+import { F5TtsBody, GradioFileDataItem, GradioFileMeta } from '../interface/f5_tts_body.js';
+import { SovitsService } from '../interface/SovitsService.js';
+
 require('dotenv').config()
 
 export class SovitsServiceimpl implements SovitsService {
@@ -17,10 +18,10 @@ export class SovitsServiceimpl implements SovitsService {
 
     /**
      * start synthesize
-     * @param text 
+     * @param body requst payload 
      * @returns stream
      */
-    public async synthesize(text: string): Promise<Readable> {
+    public async synthesize(body: F5TtsBody): Promise<Readable> {
         if (!this.config.apiUrl) {
             throw new Error("SOVITS_API_URL is not configured.");
         }
@@ -28,7 +29,7 @@ export class SovitsServiceimpl implements SovitsService {
         try {
             const session_hash = '0ugnjj28hrs';
 
-            const event_id = await this.pushToQueue(text);
+            const event_id = await this.pushToQueue(body);
             const targetUrl = await this.getTaskInfo(session_hash);
 
             if (targetUrl) {
@@ -39,7 +40,7 @@ export class SovitsServiceimpl implements SovitsService {
             }
 
         } catch (error: any) {
-            logger.error(`[SovitsService] 錯誤: ${error}`);
+            logger.error(`[SovitsService] error: ${error}`);
             throw error;
         }
     }
@@ -49,21 +50,10 @@ export class SovitsServiceimpl implements SovitsService {
      * @param text 
      * @returns event_id
      */
-    private async pushToQueue(text: string): Promise<string> {
-        const body: F5TtsBody = {
-            data: [
-                PeiyuData,
-                // "阿寬的講法是他沒有時間陪阿瑟阿瑟不喜歡這種狀況就是分手我也沒有問阿瑟發生什麼事情阿瑟說.",
-                "在這門課當中我們將深入的探討到底你需要哪一些網路的裝置哪一些網路的媒介才可以構成一個可以運作的網路.",
-                text, false, true, 0, 0.15, 32, 1
-            ],
-            event_data: null,
-            fn_index: 7,
-            trigger_id: 7,
-            session_hash: '0ugnjj28hrs', // Need a random hash usually
-        }
-
+    private async pushToQueue(body: F5TtsBody): Promise<string> {
+        console.log(`[SovitsService] Pushing to queue: ${JSON.stringify(body)}`);
         const response = await asyncPost(`${this.config.apiUrl}/gradio_api/queue/join?`, body);
+        console.log(`[SovitsService] Pushed to queue: ${JSON.stringify(response)}`);
         const event_id = response.event_id;
         return event_id;
     }
@@ -102,11 +92,14 @@ export class SovitsServiceimpl implements SovitsService {
                             return url;
                         }
                     } catch (e) {
-                        // ignore
+                        logger.error(`[SovitsService] error: ${e}`);
                     }
                 }
             }
         }
+
+        let data = response.json()
+        console.log(`[SovitsService] getTaskInfo: ${JSON.stringify(data)}`);
 
         throw new Error("Stream ended without process_completed");
     }

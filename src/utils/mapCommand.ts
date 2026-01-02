@@ -20,16 +20,20 @@ export const mapCommand = (client: Client, command: commands) => {
         try {
             await target.execute(interaction);
         } catch (error) {
-            logger.error(error);
+            logger.error(`${interaction.commandName}: ${error}`);
             const temp: response<string> = {
                 code: "501",
                 message: "伺服器錯誤",
                 body: JSON.stringify(error)
             }
-            if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({ content: JSON.stringify(temp), ephemeral: true });
-            } else {
-                await interaction.reply({ content: JSON.stringify(temp), ephemeral: true });
+            try {
+                if (interaction.replied || interaction.deferred) {
+                    await interaction.followUp({ content: JSON.stringify(temp), ephemeral: true });
+                } else {
+                    await interaction.reply({ content: JSON.stringify(temp), ephemeral: true });
+                }
+            } catch (replyError) {
+                logger.error(`Error sending error response: ${replyError}`);
             }
         }
     });

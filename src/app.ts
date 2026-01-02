@@ -13,7 +13,7 @@ const main = async () => {
 
   client.login(process.env.BOTTOKEN as string);
 
-  client.on('ready', async () => {
+  client.once('ready', async () => {
     logger.info(`Logged in as ${client.user?.tag}!`);
     const commandDic = await commandRegi(rest);
     mapCommand(client, commandDic);
