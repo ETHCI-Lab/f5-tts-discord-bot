@@ -51,9 +51,9 @@ export class SovitsServiceimpl implements SovitsService {
      * @returns event_id
      */
     private async pushToQueue(body: F5TtsBody): Promise<string> {
-        console.log(`[SovitsService] Pushing to queue: ${JSON.stringify(body)}`);
+        // console.log(`[SovitsService] Pushing to queue: ${JSON.stringify(body)}`);
         const response = await asyncPost(`${this.config.apiUrl}/gradio_api/queue/join?`, body);
-        console.log(`[SovitsService] Pushed to queue: ${JSON.stringify(response)}`);
+        // console.log(`[SovitsService] Pushed to queue: ${JSON.stringify(response)}`);
         const event_id = response.event_id;
         return event_id;
     }
@@ -98,21 +98,13 @@ export class SovitsServiceimpl implements SovitsService {
             }
         }
 
-        let data = response.json()
-        console.log(`[SovitsService] getTaskInfo: ${JSON.stringify(data)}`);
-
         throw new Error("Stream ended without process_completed");
     }
 
     private async downloadAudio(url: string): Promise<Readable> {
         const response = await axios.get(url, { responseType: 'arraybuffer' });
         const buffer = Buffer.from(response.data);
-        console.log(`[SovitsService] Downloaded audio size: ${buffer.length} bytes`);
-
-        if (buffer.length > 16) {
-            console.log(`[SovitsService] Audio Header (Hex): ${buffer.subarray(0, 16).toString('hex')}`);
-        }
-
+        // console.log(`[SovitsService] Downloaded audio size: ${buffer.length} bytes`);
         return Readable.from(buffer);
     }
 }
