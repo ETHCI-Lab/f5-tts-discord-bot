@@ -4,7 +4,6 @@ console.log(generateDependencyReport());
 import { logger } from './middlewares/log.js';
 import { commandRegi } from './commandRegister.js';
 import { mapCommand } from './utils/mapCommand.js';
-require('dotenv').config()
 
 const main = async () => {
 
