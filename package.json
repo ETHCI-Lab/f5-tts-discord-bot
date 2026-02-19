@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Discord TTS Bot using GPT-SoVITS",
   "main": "src/app.ts",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite-node src/app.ts --watch",
     "build": "tsc",
