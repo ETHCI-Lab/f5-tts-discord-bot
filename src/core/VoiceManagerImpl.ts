@@ -115,6 +115,7 @@ export class VoiceManagerImpl implements VoiceManager {
                 this.processQueue();
             }
         } catch (error) {
+            console.error(`[VoiceManager] addToQueue failed:`, error);
         }
     }
 
