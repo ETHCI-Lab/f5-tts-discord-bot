@@ -21,7 +21,7 @@ const ttsImpl = async (interaction: CommandInteraction): Promise<void> => {
         timestamp: Date.now(),
         stream: null,
         charter: null,
-        speed: speed ? speed : 0.9
+        speed: speed ? speed : 0.5
     }, index)
 
     await interaction.reply({ content: '已加入隊列', ephemeral: true });
