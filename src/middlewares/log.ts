@@ -1,6 +1,5 @@
 import { createLogger, format, transports , addColors} from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
-require('dotenv').config()
 
 const colors = {
   error: 'red',
