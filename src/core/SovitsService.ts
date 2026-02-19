@@ -5,8 +5,9 @@ import { SovitsConfig } from '../interface/SovitsConfig.js';
 import { asyncGetStream, asyncPost } from '../utils/fetch.js';
 import { F5TtsBody, GradioFileDataItem, GradioFileMeta } from '../interface/f5_tts_body.js';
 import { SovitsService } from '../interface/SovitsService.js';
+import dotenv from 'dotenv';
 
-require('dotenv').config()
+dotenv.config();
 
 export class SovitsServiceimpl implements SovitsService {
 
@@ -87,9 +88,13 @@ export class SovitsServiceimpl implements SovitsService {
                 if (line.startsWith('data: ')) {
                     try {
                         const data = JSON.parse(line.slice(6));
+                        logger.info(`[SovitsService] Received: ${JSON.stringify(data)}`);
                         if (data.msg === 'process_completed') {
-                            const url = data.output.data[0].url
-                            return url;
+                            if (data.output?.data?.[0]?.url) {
+                                return data.output.data[0].url;
+                            } else {
+                                logger.error(`[SovitsService] Invalid output structure: ${JSON.stringify(data.output)}`);
+                            }
                         }
                     } catch (e) {
                         logger.error(`[SovitsService] error: ${e}`);
