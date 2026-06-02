@@ -9,5 +9,6 @@ services:
       - .env
     volumes:
       - ./logs:/app/logs
+      - ./src/config:/app/src/config
     environment:
       - NODE_ENV=production
