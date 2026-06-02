@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 export async function asyncGet(api: string) {
     try {
         const res: Response = await fetch(api)
@@ -15,19 +18,22 @@ export async function asyncGet(api: string) {
 }
 
 export async function asyncGetStream(api: string) {
-    const res: Response = await fetch(api);
+    const res: Response = await fetch(api, {
+        headers: new Headers(
+            {
+                'Authorization': `Bearer ${process.env.F5KEY as string}`,
+                'content-Type': "application/json"
+            })
+    });
     return res;
 }
 
 export async function asyncPost(api: string, body: {} | FormData, key?: string) {
     const res: Response = await fetch(api, {
         method: 'POST',
-        headers: new Headers(key ?
+        headers: new Headers(
             {
-                'authorization': key,
-                'content-Type': "application/json"
-            } :
-            {
+                'Authorization': `Bearer ${process.env.F5KEY as string}`,
                 'content-Type': "application/json"
             }),
         body: body instanceof FormData ? body : JSON.stringify(body),
@@ -43,12 +49,9 @@ export async function asyncPost(api: string, body: {} | FormData, key?: string) 
 export async function asyncPostStream(api: string, body: {} | FormData, key?: string) {
     const res: Response = await fetch(api, {
         method: 'POST',
-        headers: new Headers(key ?
+        headers: new Headers(
             {
-                'authorization': key,
-                'content-Type': "application/json"
-            } :
-            {
+                'Authorization': `Bearer ${process.env.F5KEY as string}`,
                 'content-Type': "application/json"
             }),
         body: body instanceof FormData ? body : JSON.stringify(body),
