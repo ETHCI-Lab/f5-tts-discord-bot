@@ -92,7 +92,7 @@ export class VoiceManagerImpl implements VoiceManager {
                 text, false, true, 16030596, 0.15, 32, speed
             ],
             event_data: null,
-            fn_index: 7,
+            fn_index: 8,
             trigger_id: 7,
             session_hash: session_hash
         }
@@ -107,7 +107,7 @@ export class VoiceManagerImpl implements VoiceManager {
             if (index >= this.charterList.length || index == null) {
                 index = 0;
             }
-            task.charter = this.genCharterData(this.charterList[index].data, this.charterList[index].textCognize, task.text, "0ugnjj28hrs", task.speed);
+            task.charter = this.genCharterData(this.charterList[index].data, this.charterList[index].textCognize, task.text, "6g70s4e1zy6", task.speed);
             task.stream = await sovitsService.synthesize(task.charter);
             this.queue.push(task);
 

@@ -28,7 +28,7 @@ export class SovitsServiceimpl implements SovitsService {
         }
 
         try {
-            const session_hash = '0ugnjj28hrs';
+            const session_hash = '6g70s4e1zy6';
 
             const event_id = await this.pushToQueue(body);
             const targetUrl = await this.getTaskInfo(session_hash);
